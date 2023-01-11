@@ -9,7 +9,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     LONG_DESCRIPTION = "\n" + fh.read()
 
 VERSION = "1.0.0"
-DESCRIPTION = "Replicate ClickUp Database using Excel."
+DESCRIPTION = "Replicate ClickUp Database to a SQL Table."
 
 with open("requirements.txt") as f:
     required = f.read().splitlines()
