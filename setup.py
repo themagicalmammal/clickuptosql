@@ -16,25 +16,25 @@ with open("requirements.txt") as f:
 
 # Setting up
 setup(
-    name="clickuptoexcel",
+    name="clickuptosql",
     version=VERSION,
     author="Dipan Nanda",
     author_email="d19cyber@gmail.com",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
-    url="https://github.com/themagicalmammal/clickuptoexcel",
+    url="https://github.com/themagicalmammal/clickuptosql",
     packages=find_packages(),
     include_package_data=True,
     license="MIT",
     install_requires=required,
     project_urls={
-        # "Website": "https://github.com/themagicalmammal/clickuptoexcel",
-        # "Source code": "https://github.com/themagicalmammal/clickuptoexcel",
+        # "Website": "https://github.com/themagicalmammal/clickuptosql",
+        # "Source code": "https://github.com/themagicalmammal/clickuptosql",
         "Documentation":
-        "https://github.com/themagicalmammal/clickuptoexcel/blob/main/README.md",
+        "https://github.com/themagicalmammal/clickuptosql/blob/main/README.md",
         "Bug tracker":
-        "https://github.com/themagicalmammal/clickuptoexcel/issues",
+        "https://github.com/themagicalmammal/clickuptosql/issues",
     },
     keywords=["python", "ClickUp", "Excel", "pandas"],
     classifiers=[

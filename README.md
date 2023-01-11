@@ -1,6 +1,6 @@
 # ClickUp to Excel
-[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptoexcel.svg/?label=active+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptoexcel/?ref=repository-badge)
-[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptoexcel.svg/?label=resolved+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptoexcel/?ref=repository-badge)
+[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=active+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
+[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=resolved+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
 
 Replicate ClickUp Database using Excel.
 
@@ -9,7 +9,7 @@ Developed by [Dipan Nanda](https://github.com/themagicalmammal) (c) 2023
 ## Example of Usage
 
 ```python
-from clickuptoexcel import Migrate2Excel
+from clickuptosql import Migrate2Excel
 
 location = 'C:/Data/'
 attributes = None
