@@ -5,5 +5,4 @@
 #### New features
  
 * Perfect syncing everything while also following the ClickUp data structure.
-
-
+* Functional SQL Connection
