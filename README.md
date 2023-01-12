@@ -28,8 +28,8 @@ driver = '<-- SQL DRIVER -->'
 sql_string = f'{username}:{password}@{server}/{database}?driver={driver}'
 dtype = {'id': NVARCHAR(length=50)}
 
-helper = Migrate2Sql(clickup_api_token=api_key, spaces=spaces, optimise=True, attribute_values=attributes,
-                     sql_connection=sql_string, dtype=dtype)
+helper = Migrate2Sql(clickup_api_token=api_key, spaces=spaces, optimise=True, 
+                     attribute_values=attributes, sql_connection=sql_string, dtype=dtype)
 helper.start()
 
 ```
