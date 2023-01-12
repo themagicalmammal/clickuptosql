@@ -6,17 +6,17 @@ Date: December 2022
 """
 
 import time
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
-from os import environ, getenv
-from time import perf_counter
 
+from concurrent.futures import ThreadPoolExecutor
 from excel_write import write_in_excel
+from os import environ, getenv
 from pandas import DataFrame, concat
 from requests import get
-from sqlalchemy import create_engine
-from tqdm import tqdm
+from time import perf_counter
 from urllib3 import disable_warnings
+from tqdm import tqdm
+from datetime import datetime
+from sqlalchemy import create_engine
 
 disable_warnings()
 attributes, spaces_dict, all_tasks = [], {}, DataFrame()
@@ -36,11 +36,8 @@ class Request(object):
         :param dict headers: Contains headers like type and key for the url
         """
         if headers is None:
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": getenv("clickup_api_token"),
-            }
-        self.url = "https://api.clickup.com/api/v2/" + url
+            headers = {'Content-Type': 'application/json', 'Authorization': getenv('clickup_api_token')}
+        self.url = 'https://api.clickup.com/api/v2/' + url
         self.headers = headers
 
     def fetch_response(self, verify=False, params=None):
@@ -52,10 +49,7 @@ class Request(object):
         """
         if params is None:
             params = {}
-        request = get(url=self.url,
-                      headers=self.headers,
-                      verify=verify,
-                      params=params)
+        request = get(url=self.url, headers=self.headers, verify=verify, params=params)
         return request.json()
 
     @staticmethod
@@ -73,8 +67,7 @@ class Request(object):
             responses.set_index(responses.columns[0], inplace=True)
             return responses
         if error_string is None:
-            error_string = ("Attributes provided return a empty " +
-                            fetch_string + " dataframe.")
+            error_string = 'Attributes provided return a empty ' + fetch_string + ' dataframe.'
         if len(response.get(fetch_string)):
             for i in response.get(fetch_string):
                 responses = append_row(response=responses, record=i)
@@ -95,14 +88,13 @@ class Teams(Request):
         """
         Constructor for Teams class
         """
-        Request.__init__(self, url="team")
+        Request.__init__(self, url='team')
 
     def fetch_all_teams(self):
         """
         Fetching all Workspace(s) data from Token
         """
-        return self.valid_response(self.fetch_response(), "teams",
-                                   "Clickup API Token is invalid.")
+        return self.valid_response(self.fetch_response(), 'teams', 'Clickup API Token is invalid.')
 
 
 class Spaces(Request):
@@ -117,13 +109,13 @@ class Spaces(Request):
         :param str team_id: Team id required for fetching space(s)
         """
         self.team_id = team_id
-        Request.__init__(self, url=f"team/{self.team_id}/space")
+        Request.__init__(self, url=f'team/{self.team_id}/space')
 
     def fetch_spaces(self):
         """
         Fetching all Space(s) data from Workspace
         """
-        return self.valid_response(self.fetch_response(), "spaces")
+        return self.valid_response(self.fetch_response(), 'spaces')
 
 
 class Folders(Request):
@@ -138,7 +130,7 @@ class Folders(Request):
         :param str space_id: Space id required for fetching folder(s)
         """
         self.space_id = space_id
-        Request.__init__(self, url=f"space/{self.space_id}/folder")
+        Request.__init__(self, url=f'space/{self.space_id}/folder')
 
     def fetch_folders(self):
         """
@@ -146,7 +138,7 @@ class Folders(Request):
         """
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "folders")
+        return self.valid_response(response, 'folders')
 
 
 class FolderLessLists(Request):
@@ -169,7 +161,7 @@ class FolderLessLists(Request):
         """
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "lists")
+        return self.valid_response(response, 'lists')
 
 
 class Lists(Request):
@@ -184,7 +176,7 @@ class Lists(Request):
         :param str folder_id: Folder id required for fetching list(s)
         """
         self.folder_id = folder_id
-        Request.__init__(self, url=f"folder/{self.folder_id}")
+        Request.__init__(self, url=f'folder/{self.folder_id}')
 
     def fetch_lists(self):
         """
@@ -192,7 +184,7 @@ class Lists(Request):
         """
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "lists")
+        return self.valid_response(response, 'lists')
 
 
 class Tasks(Request):
@@ -200,7 +192,7 @@ class Tasks(Request):
     Fetching Task(s) data
     """
 
-    def __init__(self, list_id, page_no="0"):
+    def __init__(self, list_id, page_no='0'):
         """
         Constructor for Tasks class
 
@@ -209,22 +201,18 @@ class Tasks(Request):
         """
         self.list_id = list_id
         self.page_no = page_no
-        Request.__init__(
-            self,
-            url=f"list/{self.list_id}/task?page={page_no}&subtasks=true&include_closed=true",
-        )
+        Request.__init__(self,
+                         url=f'list/{self.list_id}/task?page={page_no}&subtasks=true&include_closed=true')
 
     def fetch_tasks(self):
         """
         Fetching all Tasks(s) from Lists
         """
-        query = {
-            "start_date": datetime(2022, 12, 5, 5),
-            "custom_task_ids": "false",
-            "include_subtasks": "false",
-        }
+        query = {"start_date":  datetime(2022, 12, 5, 5),
+                 "custom_task_ids": "false",
+                 "include_subtasks": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "tasks")
+        return self.valid_response(response, 'tasks')
 
 
 def append_row(response, record):
@@ -247,10 +235,10 @@ def append_row(response, record):
         row = DataFrame([row], columns=list(row.keys()))
         response = concat([response, row])
     except TypeError:
-        print("Attributes can only be lists.")
+        print('Attributes can only be lists.')
         exit()
     except ValueError:
-        print("Attribute values can only be strings.")
+        print('Attribute values can only be strings.')
         exit()
     return response
 
@@ -321,19 +309,6 @@ def fetch_tasks(list_id):
     return all_tasks
 
 
-def write_to_sql(frame, location, name):
-    """
-    Function for fetching comments inside a task
-
-    :param DataFrame frame: dataframe that will be put inside sql file
-    :param str location: location where files are saved
-    :param str name: Name of the file
-    """
-    if not frame.empty:
-        write_in_excel(frame, location + name + ".xlsx", "All Data", True)
-    return False
-
-
 def optimize(frame):
     """
     Optimize the Tasks frame
@@ -342,7 +317,7 @@ def optimize(frame):
     """
     # Filling empty values with 0 for date/time values and empty for string values.
     for i in frame.columns:
-        frame[i] = frame[i].fillna(0 if "date" in i or "time" in i else "")
+        frame[i] = frame[i].fillna(0 if 'date' in i or 'time' in i else '')
     # Dropping empty or un-unique rows
     for i in frame.columns:
         try:
@@ -353,70 +328,44 @@ def optimize(frame):
             if len(set(str(j) for j in frame[i])) < 2:
                 frame = frame.drop(columns=[i])
     # Considered either to be redundant or useless
-    useless = [
-        "text_content", "project", "orderindex", "watchers", "linked_tasks"
-    ]
+    useless = ['text_content', 'project', 'orderindex', 'watchers', 'linked_tasks']
     for i in useless:
         if i in frame.columns:
             frame.drop(columns=[i], inplace=True)
     # Mapping data to reduce the amount of code
-    attribute_pair = {
-        "status": "status",
-        "priority": "priority",
-        "folder": ["name", "id"],
-        "list": ["name", "id"],
-        "creator": ["username", "id"],
-        "space": "id",
-        "assignees": ["username", "id"],
-        "tags": "name",
-        "dependencies": ["task_id", "depends_on"],
-        "checklists": ["name", "id"],
-    }
+    attribute_pair = {'status': 'status', 'priority': 'priority', 'folder': ['name', 'id'], 'list': ['name', 'id'],
+                      'creator': ['username', 'id'], 'space': 'id', 'assignees': ['username', 'id'], 'tags': 'name',
+                      'dependencies': ['task_id', 'depends_on'], 'checklists': ['name', 'id']}
     # Optimisation according to the parameter
     for i in frame.columns:
         if i in list(attribute_pair.keys())[:6]:
             if not isinstance(attribute_pair[i], list):
-                if i == "space":
-                    frame[i + "_" + attribute_pair[i]] = frame[i].apply(
-                        lambda x: x[attribute_pair[i]] if x != "" else "")
-                    frame[i] = frame[i + "_" + attribute_pair[i]].apply(
-                        lambda x: spaces_dict[x])
+                if i == 'space':
+                    frame[i + '_' + attribute_pair[i]] = \
+                        frame[i].apply(lambda x: x[attribute_pair[i]] if x != '' else '')
+                    frame[i] = frame[i + '_' + attribute_pair[i]].apply(lambda x: spaces_dict[x])
                 else:
-                    frame[i] = frame[i].apply(lambda x: x[attribute_pair[i]]
-                                              if x != "" else "")
+                    frame[i] = frame[i].apply(lambda x: x[attribute_pair[i]] if x != '' else '')
             else:
-                frame[i + "_" + attribute_pair[i][-1]] = frame[i].apply(
-                    lambda x: x[attribute_pair[i][-1]] if x != "" else "")
-                frame[i] = frame[i].apply(lambda x: x[attribute_pair[i][0]]
-                                          if x != "" else "")
+                frame[i + '_' + attribute_pair[i][-1]] = \
+                    frame[i].apply(lambda x: x[attribute_pair[i][-1]] if x != '' else '')
+                frame[i] = frame[i].apply(lambda x: x[attribute_pair[i][0]] if x != '' else '')
         elif i in attribute_pair:
             if not isinstance(attribute_pair[i], list):
-                frame[i] = frame[i].apply(lambda x: ", ".join(
-                    [d[attribute_pair[i]] for d in x]) if x != "" else "")
+                frame[i] = frame[i].apply(lambda x: ', '.join([d[attribute_pair[i]] for d in x]) if x != '' else '')
             else:
-                if i == "checklists":
-                    frame[i] = frame[i].apply(lambda x: x[0]["items"]
-                                              if len(x) > 0 else "")
-                frame[i + "_" + attribute_pair[i][-1]] = frame[i].apply(
-                    lambda x: ", ".join(
-                        [str(d[attribute_pair[i][-1]]) for d in x])
-                    if x != "" else "")
-                frame[i] = frame[i].apply(lambda x: ", ".join(
-                    [d[attribute_pair[i][0]] for d in x]) if x != "" else "")
-        elif i in ["time_estimate", "time_spent"]:
-            frame[i] = frame[i].apply(lambda x: int(
-                time.strftime("%H%M%S", time.gmtime(x))) / pow(10, 4))
-        elif "date" in i or "time" in i:
-            frame[i] = frame[i].apply(lambda x: str(
-                datetime.fromtimestamp(int(x) / pow(10, 3)))[:10])
-        elif i == "custom_fields":
+                if i == 'checklists':
+                    frame[i] = frame[i].apply(lambda x: x[0]['items'] if len(x) > 0 else '')
+                frame[i + '_' + attribute_pair[i][-1]] = \
+                    frame[i].apply(lambda x: ', '.join([str(d[attribute_pair[i][-1]]) for d in x]) if x != '' else '')
+                frame[i] = frame[i].apply(lambda x: ', '.join([d[attribute_pair[i][0]] for d in x]) if x != '' else '')
+        elif i in ['time_estimate', 'time_spent']:
+            frame[i] = frame[i].apply(lambda x: int(time.strftime("%H%M%S", time.gmtime(x))) / pow(10, 4))
+        elif 'date' in i or 'time' in i:
+            frame[i] = frame[i].apply(lambda x: str(datetime.fromtimestamp(int(x) / pow(10, 3)))[:10])
+        elif i == 'custom_fields':
             pass
-        frame[i] = frame[i].replace(["1970-01-01", "00"], "")
-    if "deadline_date" in frame.columns:
-        frame["deadline_date"] = frame["deadline_date"].apply(
-            lambda x: str(datetime.fromtimestamp(int(float(x)) / pow(10, 3))
-                          )[:10] if x != "" else "")
-    frame.drop(columns=["custom_fields"], inplace=True)
+    frame.drop(columns=['custom_fields'], inplace=True)
     return frame.reindex(sorted(frame.columns), axis=1)
 
 
@@ -425,20 +374,11 @@ class Migrate2Sql(Teams):
     Migrating the whole Clickup Database into sql
     """
 
-    def __init__(
-        self,
-        location,
-        clickup_api_token=None,
-        attribute_values=None,
-        spaces=None,
-        optimise=False,
-        sql_connection=None,
-        dtype=None,
-    ):
+    def __init__(self, clickup_api_token=None, attribute_values=None, spaces=None, optimise=False, sql_connection=None, 
+                 dtype=None):
         """
         Constructor for Request class
 
-        :param str location: location where files are saved
         :param str clickup_api_token: Token to access ClickUp
         :param list attribute_values: attributes user wants on there sql
         :param list spaces: spaces user wants on there sql
@@ -446,7 +386,6 @@ class Migrate2Sql(Teams):
         """
         global attributes
         self.clickup_api_token = clickup_api_token
-        self.location = location
         attributes = attribute_values
         self.spaces = spaces
         self.optimize = optimise
@@ -459,7 +398,7 @@ class Migrate2Sql(Teams):
         """
         Set some environment variables
         """
-        environ["clickup_api_token"] = self.clickup_api_token
+        environ['clickup_api_token'] = self.clickup_api_token
 
     def start(self):
         """
@@ -470,22 +409,14 @@ class Migrate2Sql(Teams):
         start = perf_counter()
         for team_id in teams.index:
             spaces = fetch_spaces(team_id=team_id)
-            spaces_dict = spaces.to_dict()["name"]
-            for space_id in tqdm(
-                    spaces.index if self.spaces is None else self.spaces):
+            spaces_dict = spaces.to_dict()['name']
+            for space_id in tqdm(spaces.index if self.spaces is None else self.spaces):
                 with ThreadPoolExecutor() as execute:
-                    _ = [
-                        execute.submit(i, space_id)
-                        for i in [fetch_folders, fetch_space_lists]
-                    ]
+                    _ = [execute.submit(i, space_id) for i in [fetch_folders, fetch_space_lists]]
         global all_tasks
         if self.optimize:
             all_tasks = optimize(all_tasks)
         engine = create_engine("mssql+pyodbc://" + self.sql_connection)
-        all_tasks.to_sql("Tasks",
-                         engine,
-                         if_exists="replace",
-                         dtype=self.dtype)
-        # write_to_sql(all_tasks, self.location, 'Tasks')
+        all_tasks.to_sql('Tasks', engine, if_exists='replace', dtype=self.dtype)
         end = perf_counter()
-        print(f"Finished in {round(end - start, 2)} second(s)")
+        print(f'Finished in {round(end - start, 2)} second(s)')
