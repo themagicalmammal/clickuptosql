@@ -23,9 +23,7 @@ attributes, spaces_dict, all_tasks = [], {}, DataFrame()
 
 
 class Request(object):
-    """
-    Generating Request(s) from Clickup
-    """
+    """Generating Request(s) from Clickup"""
 
     def __init__(self, url, headers=None):
         """
@@ -86,28 +84,20 @@ class Request(object):
 
 
 class Teams(Request):
-    """
-    Fetching Workspace(s) data
-    """
+    """Fetching Workspace(s) data"""
 
     def __init__(self):
-        """
-        Constructor for Teams class
-        """
+        """Constructor for Teams class"""
         Request.__init__(self, url="team")
 
     def fetch_all_teams(self):
-        """
-        Fetching all Workspace(s) data from Token
-        """
+        """Fetching all Workspace(s) data from Token"""
         return self.valid_response(self.fetch_response(), "teams",
                                    "Clickup API Token is invalid.")
 
 
 class Spaces(Request):
-    """
-    Fetching Space(s) data
-    """
+    """Fetching Space(s) data"""
 
     def __init__(self, team_id):
         """
@@ -119,16 +109,12 @@ class Spaces(Request):
         Request.__init__(self, url=f"team/{self.team_id}/space")
 
     def fetch_spaces(self):
-        """
-        Fetching all Space(s) data from Workspace
-        """
+        """Fetching all Space(s) data from Workspace"""
         return self.valid_response(self.fetch_response(), "spaces")
 
 
 class Folders(Request):
-    """
-    Fetching Folder(s) data
-    """
+    """Fetching Folder(s) data"""
 
     def __init__(self, space_id):
         """
@@ -140,18 +126,14 @@ class Folders(Request):
         Request.__init__(self, url=f"space/{self.space_id}/folder")
 
     def fetch_folders(self):
-        """
-        Fetching all Folder(s) data from Spaces
-        """
+        """Fetching all Folder(s) data from Spaces"""
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
         return self.valid_response(response, "folders")
 
 
 class FolderLessLists(Request):
-    """
-    Fetching Folder Less List(s) data
-    """
+    """Fetching Folder Less List(s) data"""
 
     def __init__(self, space_id):
         """
@@ -163,18 +145,14 @@ class FolderLessLists(Request):
         Request.__init__(self, url=f"space/{self.space_id}/list")
 
     def fetch_folders_lists(self):
-        """
-        Fetching all Folder less List(s) from Spaces
-        """
+        """Fetching all Folder less List(s) from Spaces"""
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
         return self.valid_response(response, "lists")
 
 
 class Lists(Request):
-    """
-    Fetching List(s) data
-    """
+    """Fetching List(s) data"""
 
     def __init__(self, folder_id):
         """
@@ -186,18 +164,14 @@ class Lists(Request):
         Request.__init__(self, url=f"folder/{self.folder_id}")
 
     def fetch_lists(self):
-        """
-        Fetching all List(s) from Folders
-        """
+        """Fetching all List(s) from Folders"""
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
         return self.valid_response(response, "lists")
 
 
 class Tasks(Request):
-    """
-    Fetching Task(s) data
-    """
+    """Fetching Task(s) data"""
 
     def __init__(self, list_id, page_no="0"):
         """
@@ -214,9 +188,7 @@ class Tasks(Request):
         )
 
     def fetch_tasks(self):
-        """
-        Fetching all Tasks(s) from Lists
-        """
+        """Fetching all Tasks(s) from Lists"""
         query = {
             "start_date": datetime(2022, 12, 5, 5),
             "custom_task_ids": "false",
@@ -227,9 +199,7 @@ class Tasks(Request):
 
 
 def append_row(response, record):
-    """
-    Adds a new row into the Dataframe
-    """
+    """Adds a new row into the Dataframe"""
     row = {}
     if attributes is None or len(attributes) == 0:
         attribute = list(record.keys())
@@ -402,9 +372,7 @@ def optimize(frame):
 
 
 class Migrate2Sql(Teams):
-    """
-    Migrating the whole Clickup Database into sql
-    """
+    """Migrating the whole Clickup Database into sql"""
 
     def __init__(
         self,
@@ -434,15 +402,11 @@ class Migrate2Sql(Teams):
         Teams.__init__(self)
 
     def __set_environment__(self):
-        """
-        Set some environment variables
-        """
+        """Set some environment variables"""
         environ["clickup_api_token"] = self.clickup_api_token
 
     def start(self):
-        """
-        Function that migrates the ClickUp data to sql files
-        """
+        """Function that migrates the ClickUp data to sql files"""
         global spaces_dict
         teams = self.fetch_all_teams()
         start = perf_counter()
