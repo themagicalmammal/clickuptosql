@@ -181,7 +181,7 @@ class Tasks(Request):
         Request.__init__(
             self,
             url=f"list/{self.list_id}/task?"
-                f"page={page_no}&subtasks=true&include_closed=true",
+            f"page={page_no}&subtasks=true&include_closed=true",
         )
 
     def fetch_tasks(self):
