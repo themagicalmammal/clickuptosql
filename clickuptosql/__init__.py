@@ -4,6 +4,7 @@ Description: ClickUp API Data to sql
 Written By: Dipan Nanda
 Date: December 2022
 """
+import sys
 
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -81,7 +82,7 @@ class Request(object):
                 responses.set_index(responses.columns[0], inplace=True)
             except KeyError:
                 print(error_string)
-                exit()
+                sys.exit()
         return responses
 
 
@@ -247,10 +248,10 @@ def append_row(response, record):
         response = concat([response, row])
     except TypeError:
         print("Attributes can only be lists.")
-        exit()
+        sys.exit()
     except ValueError:
         print("Attribute values can only be strings.")
-        exit()
+        sys.exit()
     return response
 
 
