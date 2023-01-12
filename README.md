@@ -1,8 +1,8 @@
-# ClickUp to Excel
+# ClickUp to SQL
 [![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=active+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
 [![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=resolved+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
 
-Replicate ClickUp Database using Excel.
+Replicate ClickUp Database to a SQL Table.
 
 Developed by [Dipan Nanda](https://github.com/themagicalmammal) (c) 2023
 
