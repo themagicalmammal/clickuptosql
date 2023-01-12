@@ -11,7 +11,6 @@ from datetime import datetime
 from os import environ, getenv
 from time import perf_counter
 
-from excel_write import write_in_excel
 from pandas import DataFrame, concat
 from requests import get
 from sqlalchemy import create_engine
