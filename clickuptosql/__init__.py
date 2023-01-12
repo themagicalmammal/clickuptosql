@@ -5,7 +5,6 @@ Written By: Dipan Nanda
 Date: December 2022
 """
 import sys
-
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
