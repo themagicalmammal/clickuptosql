@@ -360,7 +360,7 @@ def optimize(frame):
     }
     # Optimisation according to the parameter
     for i in frame.columns:
-        if i in list(attribute_pair.keys())[:6]:
+        if i in list(attribute_pair)[:6]:
             if not isinstance(attribute_pair[i], list):
                 if i == "space":
                     frame[i + "_" + attribute_pair[i]] = frame[i].apply(
