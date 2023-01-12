@@ -365,8 +365,6 @@ def optimize(frame):
         elif "date" in i or "time" in i:
             frame[i] = frame[i].apply(lambda x: str(
                 datetime.fromtimestamp(int(x) / pow(10, 3)))[:10])
-        elif i == "custom_fields":
-            pass
     frame.drop(columns=["custom_fields"], inplace=True)
     return frame.reindex(sorted(frame.columns), axis=1)
 
