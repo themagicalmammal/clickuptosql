@@ -336,7 +336,7 @@ def optimize(frame):
                 frame = frame.drop(columns=[i])
         except TypeError:
             # For cases where dataframe has dict/list values
-            if len(set(str(j) for j in frame[i])) < 2:
+            if len({str(j) for j in frame[i]}) < 2:
                 frame = frame.drop(columns=[i])
     # Considered either to be redundant or useless
     useless = [
