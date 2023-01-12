@@ -29,8 +29,8 @@ setup(
     license="MIT",
     install_requires=required,
     project_urls={
-        # "Website": "https://github.com/themagicalmammal/clickuptosql",
-        # "Source code": "https://github.com/themagicalmammal/clickuptosql",
+      # "Website": "https://github.com/themagicalmammal/clickuptosql",
+      # "Source code": "https://github.com/themagicalmammal/clickuptosql",
         "Documentation":
         "https://github.com/themagicalmammal/clickuptosql/blob/main/README.md",
         "Bug tracker":
