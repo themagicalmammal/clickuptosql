@@ -1,6 +1,6 @@
 # ClickUp to SQL
-[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=active+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
-[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=resolved+issues&show_trend=true&token=opRzze8gP9JJbKX_SR5u4zfF)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
+[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=active+issues&show_trend=true&token=8NKGWTDemy2iXLQmeLo5p7-k)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
+[![DeepSource](https://deepsource.io/gh/themagicalmammal/clickuptosql.svg/?label=resolved+issues&show_trend=true&token=8NKGWTDemy2iXLQmeLo5p7-k)](https://deepsource.io/gh/themagicalmammal/clickuptosql/?ref=repository-badge)
 
 Replicate ClickUp Database to a SQL Table.
 
