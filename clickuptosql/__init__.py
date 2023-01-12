@@ -22,7 +22,7 @@ attributes, spaces_dict, all_tasks = [], {}, DataFrame()
 ":param list attributes: List of keys that would be kept in sql."
 
 
-class Request(object):
+class Request:
     """Generating Request(s) from Clickup"""
 
     def __init__(self, url, headers=None):
