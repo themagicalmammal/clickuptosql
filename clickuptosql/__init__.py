@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-Description: ClickUp API Data to sql
-Written By: Dipan Nanda
-Date: December 2022
-"""
+"""ClickUp API Data to SQL."""
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -184,7 +180,8 @@ class Tasks(Request):
         self.page_no = page_no
         Request.__init__(
             self,
-            url=f"list/{self.list_id}/task?page={page_no}&subtasks=true&include_closed=true",
+            url=f"list/{self.list_id}/task?"
+                f"page={page_no}&subtasks=true&include_closed=true",
         )
 
     def fetch_tasks(self):
