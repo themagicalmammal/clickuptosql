@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """ClickUp API Data to sql"""
 
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from os import environ, getenv
 from time import perf_counter
 
-import time
 from pandas import DataFrame, concat
 from requests import get
 from sqlalchemy import *
