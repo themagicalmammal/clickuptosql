@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-"""ClickUp API Data to SQL."""
-import sys
-import time
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
-from os import environ, getenv
-from time import perf_counter
+"""ClickUp API Data to sql"""
 
+from concurrent.futures import ThreadPoolExecutor
+from os import environ, getenv
 from pandas import DataFrame, concat
 from requests import get
-from sqlalchemy import create_engine
-from tqdm import tqdm
+from time import perf_counter
 from urllib3 import disable_warnings
+from tqdm import tqdm
+from datetime import datetime
+from sqlalchemy import *
 
 disable_warnings()
 attributes, spaces_dict, all_tasks = [], {}, DataFrame()
 ":param list attributes: List of keys that would be kept in sql."
 
 
-class Request:
-    """Generating Request(s) from Clickup"""
+class Request(object):
+    """
+    Generating Request(s) from Clickup
+    """
 
     def __init__(self, url, headers=None):
         """
@@ -29,11 +29,8 @@ class Request:
         :param dict headers: Contains headers like type and key for the url
         """
         if headers is None:
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": getenv("clickup_api_token"),
-            }
-        self.url = "https://api.clickup.com/api/v2/" + url
+            headers = {'Content-Type': 'application/json', 'Authorization': getenv('clickup_api_token')}
+        self.url = 'https://api.clickup.com/api/v2/' + url
         self.headers = headers
 
     def fetch_response(self, verify=False, params=None):
@@ -45,10 +42,7 @@ class Request:
         """
         if params is None:
             params = {}
-        request = get(url=self.url,
-                      headers=self.headers,
-                      verify=verify,
-                      params=params)
+        request = get(url=self.url, headers=self.headers, verify=verify, params=params)
         return request.json()
 
     @staticmethod
@@ -66,8 +60,7 @@ class Request:
             responses.set_index(responses.columns[0], inplace=True)
             return responses
         if error_string is None:
-            error_string = ("Attributes provided return a empty " +
-                            fetch_string + " dataframe.")
+            error_string = 'Attributes provided return a empty ' + fetch_string + ' dataframe.'
         if len(response.get(fetch_string)):
             for i in response.get(fetch_string):
                 responses = append_row(response=responses, record=i)
@@ -75,25 +68,32 @@ class Request:
                 responses.set_index(responses.columns[0], inplace=True)
             except KeyError:
                 print(error_string)
-                sys.exit()
+                exit()
         return responses
 
 
 class Teams(Request):
-    """Fetching Workspace(s) data"""
+    """
+    Fetching Workspace(s) data
+    """
 
     def __init__(self):
-        """Constructor for Teams class"""
-        Request.__init__(self, url="team")
+        """
+        Constructor for Teams class
+        """
+        Request.__init__(self, url='team')
 
     def fetch_all_teams(self):
-        """Fetching all Workspace(s) data from Token"""
-        return self.valid_response(self.fetch_response(), "teams",
-                                   "Clickup API Token is invalid.")
+        """
+        Fetching all Workspace(s) data from Token
+        """
+        return self.valid_response(self.fetch_response(), 'teams', 'Clickup API Token is invalid.')
 
 
 class Spaces(Request):
-    """Fetching Space(s) data"""
+    """
+    Fetching Space(s) data
+    """
 
     def __init__(self, team_id):
         """
@@ -102,15 +102,19 @@ class Spaces(Request):
         :param str team_id: Team id required for fetching space(s)
         """
         self.team_id = team_id
-        Request.__init__(self, url=f"team/{self.team_id}/space")
+        Request.__init__(self, url=f'team/{self.team_id}/space')
 
     def fetch_spaces(self):
-        """Fetching all Space(s) data from Workspace"""
-        return self.valid_response(self.fetch_response(), "spaces")
+        """
+        Fetching all Space(s) data from Workspace
+        """
+        return self.valid_response(self.fetch_response(), 'spaces')
 
 
 class Folders(Request):
-    """Fetching Folder(s) data"""
+    """
+    Fetching Folder(s) data
+    """
 
     def __init__(self, space_id):
         """
@@ -119,17 +123,21 @@ class Folders(Request):
         :param str space_id: Space id required for fetching folder(s)
         """
         self.space_id = space_id
-        Request.__init__(self, url=f"space/{self.space_id}/folder")
+        Request.__init__(self, url=f'space/{self.space_id}/folder')
 
     def fetch_folders(self):
-        """Fetching all Folder(s) data from Spaces"""
+        """
+        Fetching all Folder(s) data from Spaces
+        """
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "folders")
+        return self.valid_response(response, 'folders')
 
 
 class FolderLessLists(Request):
-    """Fetching Folder Less List(s) data"""
+    """
+    Fetching Folder Less List(s) data
+    """
 
     def __init__(self, space_id):
         """
@@ -141,14 +149,18 @@ class FolderLessLists(Request):
         Request.__init__(self, url=f"space/{self.space_id}/list")
 
     def fetch_folders_lists(self):
-        """Fetching all Folder less List(s) from Spaces"""
+        """
+        Fetching all Folder less List(s) from Spaces
+        """
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "lists")
+        return self.valid_response(response, 'lists')
 
 
 class Lists(Request):
-    """Fetching List(s) data"""
+    """
+    Fetching List(s) data
+    """
 
     def __init__(self, folder_id):
         """
@@ -157,19 +169,23 @@ class Lists(Request):
         :param str folder_id: Folder id required for fetching list(s)
         """
         self.folder_id = folder_id
-        Request.__init__(self, url=f"folder/{self.folder_id}")
+        Request.__init__(self, url=f'folder/{self.folder_id}')
 
     def fetch_lists(self):
-        """Fetching all List(s) from Folders"""
+        """
+        Fetching all List(s) from Folders
+        """
         query = {"archived": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "lists")
+        return self.valid_response(response, 'lists')
 
 
 class Tasks(Request):
-    """Fetching Task(s) data"""
+    """
+    Fetching Task(s) data
+    """
 
-    def __init__(self, list_id, page_no="0"):
+    def __init__(self, list_id, page_no='0'):
         """
         Constructor for Tasks class
 
@@ -178,25 +194,24 @@ class Tasks(Request):
         """
         self.list_id = list_id
         self.page_no = page_no
-        Request.__init__(
-            self,
-            url=f"list/{self.list_id}/task?"
-            f"page={page_no}&subtasks=true&include_closed=true",
-        )
+        Request.__init__(self,
+                         url=f'list/{self.list_id}/task?page={page_no}&subtasks=true&include_closed=true')
 
     def fetch_tasks(self):
-        """Fetching all Tasks(s) from Lists"""
-        query = {
-            "start_date": datetime(2022, 12, 5, 5),
-            "custom_task_ids": "false",
-            "include_subtasks": "false",
-        }
+        """
+        Fetching all Tasks(s) from Lists
+        """
+        query = {"start_date":  datetime(2022, 12, 5, 5),
+                 "custom_task_ids": "false",
+                 "include_subtasks": "false"}
         response = self.fetch_response(params=query)
-        return self.valid_response(response, "tasks")
+        return self.valid_response(response, 'tasks')
 
 
 def append_row(response, record):
-    """Adds a new row into the Dataframe"""
+    """
+    Adds a new row into the Dataframe
+    """
     row = {}
     if attributes is None or len(attributes) == 0:
         attribute = list(record.keys())
@@ -213,11 +228,11 @@ def append_row(response, record):
         row = DataFrame([row], columns=list(row.keys()))
         response = concat([response, row])
     except TypeError:
-        print("Attributes can only be lists.")
-        sys.exit()
+        print('Attributes can only be lists.')
+        exit()
     except ValueError:
-        print("Attribute values can only be strings.")
-        sys.exit()
+        print('Attribute values can only be strings.')
+        exit()
     return response
 
 
